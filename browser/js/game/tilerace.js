@@ -1,12 +1,31 @@
 'use strict';
 
+function loadState () {
+    var state = {},
+        game = window.game;
+
+    state.preload = function () {
+        game.load.image('black', '../../assets/black.png');
+        game.load.image('white', '../../assets/white.png');
+        game.load.image('red', '../../assets/red.png');
+        game.load.image('blue', '../../assets/blue.png');
+        game.load.image('orange', '../../assets/orange.png');
+        game.load.image('green', '../../assets/green.png');
+        game.load.image('yellow', '../../assets/yellow.png');
+    }
+
+    state.create = function () {
+
+    }
+}
+
 function Game () {}
 
 /*
  Grid is a constructor function that allows us to define object that contain
  coordinates that represent the gridBoard itself. Reference the gridBoard by
  accessing a G
-  */
+ */
 
 function Grid (x, y) {
     this.x = x;
@@ -77,11 +96,11 @@ Game.prototype.create = function () {
                 var idx = x * 5 + y,
                     xCor = x * TILE_SIZE,
                     yCor = y * TILE_SIZE,
-                    color = tileSprites[x].key;
+                    color = tiles[x].key;
 
                 tileRow.push(new Tile(xCor, yCor, color));
-                tileSprites[idx].x = xCor;
-                tileSprites[idx].y = yCor;
+                tiles[idx].x = xCor;
+                tiles[idx].y = yCor;
             }
             tiles.push(tileRow);
         }
@@ -92,10 +111,7 @@ Game.prototype.create = function () {
     this.tiles = this.tileSprites();
     console.log("board", this.board)
     console.log("tiles", this.tiles);
-    console.log('sprites', this.tiles[0][0])
-    var test = this.tileSprites[0][0];
-    test.x = 1;
-    console.log(test);
+
 
 
 
