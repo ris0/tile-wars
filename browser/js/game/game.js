@@ -1,12 +1,5 @@
 'use strict';
 
-/*
-TODO:
-- Generate a 3x3 pattern to match
-- Game logic that will handle the sliding..
--
- */
-
 function Game () {}
 
 Game.prototype.preload = function () {
@@ -108,18 +101,18 @@ Game.prototype.update = function () {
 
 Game.prototype.render = function () {
 
-    var allTiles = this.tiles;
-    for (var y = 0; y < 5; y++) {
-
-        for (var x = 0; x < 5; x++) {
-            //console.log(allTiles[i][j].x, allTiles[i][j].y);
-
-            var sprite = allTiles[x][y];
-            //console.log(sprite.key, x, y);
-            game.debug.bodyInfo(sprite);
-        }
-
-    }
+    //var allTiles = this.tiles;
+    //for (var y = 0; y < 5; y++) {
+    //
+    //    for (var x = 0; x < 5; x++) {
+    //        //console.log(allTiles[i][j].x, allTiles[i][j].y);
+    //
+    //        var sprite = allTiles[x][y];
+    //        //console.log(sprite.key, x, y);
+    //        game.debug.bodyInfo(sprite);
+    //    }
+    //
+    //}
 
 
 };
