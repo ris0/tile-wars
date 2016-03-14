@@ -19,41 +19,20 @@ BasicGame.Game.prototype = {
         this.music = this.add.audio('music',1,true);
         this.music.play('',0,1,true);
 
-        this.titleimage = this.add.sprite(this.world.centerX,70,'spriteset');
-        this.titleimage.frameName = 'title.png';
-        this.titleimage.anchor.setTo(0.5,0.5);
-        this.titleimage.scale.setTo(0.5,0.5);
-
         this.boundingbox = this.add.sprite(this.world.centerX,this.world.height-20,'spriteset');
         this.boundingbox.frameName = 'outerbox.png';
         this.boundingbox.anchor.setTo(0.5,1);
-        this.boundingbox.scale.setTo(0.5,0.5);
+        this.boundingbox.scale.setTo(0,0);
 
-        this.startButton = this.add.sprite(this.world.centerX-80,180,'spriteset');
+        this.startButton = this.add.sprite(this.world.centerX,180,'spriteset');
         this.startButton.frameName = 'start.png';
         this.startButton.anchor.setTo(0.5,0.5);
         this.startButton.scale.setTo(0.5,0.5);
         this.startButton.inputEnabled = true;
         this.startButton.events.onInputDown.add(this.startGame, this);
 
-        this.solveButton = this.add.sprite(this.world.centerX+80,180,'spriteset');
-        this.solveButton.frameName = 'solve.png';
-        this.solveButton.anchor.setTo(0.5,0.5);
-        this.solveButton.scale.setTo(0.5,0.5);
-        this.solveButton.inputEnabled = true;
-        this.solveButton.events.onInputDown.add(this.solveGame, this);
-
-        this.getUrlButton = this.add.sprite(this.world.centerX,230,'spriteset');
-        this.getUrlButton.frameName = 'geturl.png';
-        this.getUrlButton.anchor.setTo(0.5,0.5);
-        this.getUrlButton.scale.setTo(0.5,0.5);
-        this.getUrlButton.inputEnabled = true;
-        this.getUrlButton.events.onInputDown.add(this.convertToUrl, this);
-
         this.timertext = this.add.text(this.world.centerX+20, 20, "Time", { font: "30px Arial", fill: "#ffffff", align: "center" });
         this.timertext.visible = false;
-        this.clicktext = this.add.text(this.world.centerX+20, 80, "Clicks", { font: "30px Arial", fill: "#ffffff", align: "center" } );
-        this.clicktext.visible = false;
 
         this.musicButton = this.add.sprite(this.world.width - 10,5,'spriteset');
         this.musicButton.frameName = 'music_on.png';
@@ -130,10 +109,11 @@ BasicGame.Game.prototype = {
         }
     },
 
+
     solvePuzzle : function(){
         if(this.playermoves.length>0||this.moves.length>0){
             this.timertext.visible = false;
-            this.clicktext.visible = false;
+            //this.clicktext.visible = false;
             this.wintext.visible = false;
             this.resetTexts(1);
             this.switchAlpha(1);
@@ -168,7 +148,7 @@ BasicGame.Game.prototype = {
     },
     checkWinandClicks : function(){
         this.totalclicks++;
-        this.clicktext.setText(this.totalclicks+' clicks');
+        //this.clicktext.setText(this.totalclicks+' clicks');
         var flag = true;
         for(var i=0;i<4;i++){
             for(var j=0;j<4;j++){
@@ -193,8 +173,8 @@ BasicGame.Game.prototype = {
         var no = box.no;
         var x,y = 0;
         var moveDir =  'dont';
-        for(var i=0;i<4;i++){
-            for(var j=0;j<4;j++){
+        for(var i=0;i<5;i++){
+            for(var j=0;j<5;j++){
                 if(this.matrix[i][j]==no){
                     x = i;
                     y = j;
@@ -249,19 +229,27 @@ BasicGame.Game.prototype = {
     initmatrix : function(){
         this.matrix = [];
         this.tiles = [];
-        for(var i=0;i<4;i++){
+
+        for(var i=0;i<5;i++){
             this.matrix[i] = [];
-            for(var j=0;j<4;j++){
-                var tilenumber = (i*4)+j;
+
+            for(var j=0;j<5;j++){
+                var tilenumber = (i*5)+j;
                 this.matrix[i][j] = tilenumber+1;
-                if(tilenumber<15){
-                    var k = this.add.sprite(83+j*65,315+i*72,'spriteset'); //x=83 and y=315 to get the tiles inside the box - trial and error
-                    k.frameName = (tilenumber+1).toString() + '.png';
-                    k.anchor.setTo(0.5,0.5);
-                    k.scale.setTo(0.5,0.5);
+                if(tilenumber<25){
+                    var imageKey = ['white','red','blue', 'orange', 'green', 'yellow'];
+                    //var idx = Math.floor(Math.random()*6);
+                    var k = this.add.sprite(83+j*65,315+i*72,imageKey[idx]); //x=83 and y=315 to get the tiles
+                    // inside the
+
+                    k.anchor.setTo(0.8,1);
                     k.no = tilenumber+1;
                     this.tiles[tilenumber] = k;
                     this.tiles[tilenumber].inputEnabled = true;
+
+                    //console.log(this.tiles[tilenumber])
+
+                    //this.tiles[tilenumber].hitArea = new Phaser.Rectangle(32,32,130,130);
                     this.tiles[tilenumber].events.onInputDown.add(function(box){
                         var t = this.shiftTile(box);
                         if(t!='dont'){
@@ -269,11 +257,12 @@ BasicGame.Game.prototype = {
                         }
                     }, this);
                 }
-                else{
+                else {
                     this.matrix[i][j] = 0;
                 }
             }
         }
+
     },
 
     chooseTile : function(x,y){
@@ -379,7 +368,7 @@ BasicGame.Game.prototype = {
     resetScores : function(){
         this.totaltime = 0;
         this.totalclicks = 0;
-        this.clicktext.setText('0 clicks');
+        //this.clicktext.setText('0 clicks');
         this.timertext.setText('0 seconds');
     },
 
@@ -403,18 +392,17 @@ BasicGame.Game.prototype = {
 
     resetTexts : function(a){
         switch(a){
-            case 1  :   this.clicktext.anchor.setTo(0,0);
-                        this.timertext.anchor.setTo(0,0);
-                        this.clicktext.x = this.world.centerX+20;
+            case 1  :   this.timertext.anchor.setTo(0,0);
+
                         this.timertext.x = this.world.centerX+20;
-                        this.clicktext.y = 80;
+
                         this.timertext.y = 20;
                         break;
-            case 2  :   this.clicktext.anchor.setTo(0.5,0.5);
+            case 2  :
                         this.timertext.anchor.setTo(0.5,0.5);
-                        this.clicktext.x = this.world.centerX;
+
                         this.timertext.x = this.world.centerX;
-                        this.clicktext.y = this.world.centerY + 100;
+
                         this.timertext.y = this.world.centerY + 200;
                         break;
             default :   break;
@@ -434,7 +422,7 @@ BasicGame.Game.prototype = {
 
                 
                 this.timertext.visible = true;
-                this.clicktext.visible = true;
+                //this.clicktext.visible = true;
                 this.wintext.visible = false;
                 this.resetTexts(1);
                 this.switchAlpha(1);
@@ -456,12 +444,13 @@ BasicGame.Game.prototype = {
                 this.gameState = 'ready';
 
                 this.timertext.visible = false;
-                this.clicktext.visible = false;
+                //this.clicktext.visible = false;
                 this.wintext.visible = false;
                 this.resetTexts(1);
                 this.switchAlpha(1);
 
                 this.add.tween(this.titleimage).to({x : this.world.centerX},500, Phaser.Easing.Sinusoidal.InOut, true);
+
             }
     },
 
@@ -477,3 +466,12 @@ BasicGame.Game.prototype = {
     }
 
 };
+
+
+var game = new Phaser.Game(360,600, Phaser.AUTO, 'gameContainer');
+
+game.state.add('Boot',BasicGame.Boot);
+game.state.add('Preloader',BasicGame.Preloader);
+game.state.add('Game',BasicGame.Game);
+
+game.state.start('Boot');
